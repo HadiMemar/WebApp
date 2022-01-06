@@ -23,11 +23,11 @@ namespace WebApp.Infrastructure
         public DbSet<PO> POs{ get; set; }
         public DbSet<SO> Sos{ get; set; }
         public DbSet<Hub> Hubs { get; set; }
-        public DbSet<Gateway> Gateways { get; set; }
-        public DbSet<HubGateway> HubGateways { get; set; }
-        public DbSet<HubOnHandGateway> HubOnHandGateways { get; set; }
-        public DbSet<HubOnPoGateway> HubOnPoGateways { get; set; }
-        public DbSet<HubOnSOGateway> HubOnSOGateways { get; set; }
+        //public DbSet<Gateway> Gateways { get; set; }
+        //public DbSet<HubGateway> HubGateways { get; set; }
+        //public DbSet<HubOnHandGateway> HubOnHandGateways { get; set; }
+        //public DbSet<HubOnPoGateway> HubOnPoGateways { get; set; }
+        //public DbSet<HubOnSOGateway> HubOnSOGateways { get; set; }
 
 
         public DbSet<ItemEntry> ItemEntrys { get; set; }

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.Infrastructure;
 
 namespace WebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220106072952_gateway")]
+    partial class gateway
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,9 +24,6 @@ namespace WebApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("Direction")
                         .HasColumnType("tinyint(1)");
@@ -61,6 +60,23 @@ namespace WebApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("WebApp.Domain.Models.Gateway", b =>
+                {
+                    b.Property<int>("GatewayId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Attribute")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("GatewayId");
+
+                    b.ToTable("Gateway");
                 });
 
             modelBuilder.Entity("WebApp.Domain.Models.Hub", b =>
@@ -138,6 +154,9 @@ namespace WebApp.Migrations
                     b.Property<bool>("Direction")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int>("GatewayId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Quantity")
                         .HasColumnType("double");
 
@@ -151,6 +170,8 @@ namespace WebApp.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompoundTransactionId");
+
+                    b.HasIndex("GatewayId");
 
                     b.ToTable("Transactions");
                 });
@@ -207,6 +228,14 @@ namespace WebApp.Migrations
                     b.HasOne("WebApp.Domain.Models.CompoundTransaction", null)
                         .WithMany("LeafTransactions")
                         .HasForeignKey("CompoundTransactionId");
+
+                    b.HasOne("WebApp.Domain.Models.Gateway", "Gateway")
+                        .WithMany()
+                        .HasForeignKey("GatewayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gateway");
                 });
 
             modelBuilder.Entity("WebApp.Domain.Models.CompoundTransaction", b =>

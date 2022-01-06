@@ -34,11 +34,14 @@ namespace WebApp.Infrastructure.Repositories
                 throw new NotFoundException("Po transaction not found", "403");
             }
             po.Id = result.Id;
+            po.HubId = result.HubId;
             po.TargetId = result.TargetId;
             po.Entries = result.Entries;
+            po.LeafTransactions = result.LeafTransactions;
             po.Total = result.Total;
             po.Direction = result.Direction;
             po.Post();
+            _context.POs.Update(po);
             return true;
         }
     }

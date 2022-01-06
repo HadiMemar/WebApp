@@ -11,10 +11,8 @@ namespace WebApp.Domain.Models.CompundTransactions
 {
     public class PO : CompoundTransaction
     {
-        [NotMapped]
-        public override Gateway CustomerGateway { get; set; } = new HubCusOnPoGateway(1);
-        [NotMapped]
-        public override Gateway ChildrenGateway  { get; set; } = new HubOnHandGateway(1);
+        public int HubId { get; set; }
+
 
         public PO()
         {
@@ -22,8 +20,8 @@ namespace WebApp.Domain.Models.CompundTransactions
         }
         public PO(IUnitOfWork unitOfWork)
         {
-            //this.CustomerGateway = new HubCusOnPoGateway(1);
-            //this.ChildrenGateway = new HubOnHandGateway(1);
+            this.CustomerGateway = new HubCusOnPoGateway(HubId);
+            this.ChildrenGateway = new HubOnPoGateway(HubId);
             this.unitOfWork = unitOfWork;
             this.ChildrenGateway._unitOfWork = unitOfWork;
             this.CustomerGateway._unitOfWork = unitOfWork;
@@ -34,17 +32,22 @@ namespace WebApp.Domain.Models.CompundTransactions
             Entries.ForEach(i =>
             {
 
-                StockHubTrans t = new StockHubTrans { HubId=1,Price=i.Price,TargetId = i.ItemId, Direction = Direction, Gateway = ChildrenGateway, Quantity = i.Qty };
-                if (t.Post())
+                StockHubTrans aStockHubTrans = new StockHubTrans { HubId = HubId, Price = i.Price, TargetId = i.ItemId, Direction = Direction, Gateway = ChildrenGateway, Quantity = i.Qty };
+                if (aStockHubTrans.Post())
                 {
-                    total += t.GetAmount();
+                    this.LeafTransactions.Add(aStockHubTrans);
+                    unitOfWork.Transactions.Add(aStockHubTrans);
+                    total += aStockHubTrans.GetAmount();
+                    Total = total;
                 }
 
             });
 
-            Transaction t = new Transaction { TargetId = TargetId, Direction = Direction, Gateway = CustomerGateway, Quantity = total };
+            AccountTrans t = new AccountTrans { TargetId = TargetId, Direction = Direction, Gateway = CustomerGateway, Quantity = total };
             if (t.Post())
             {
+                this.LeafTransactions.Add(t);
+                unitOfWork.Transactions.Add(t);
                 Total = total;
                 return true;
             }

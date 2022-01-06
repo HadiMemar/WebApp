@@ -13,9 +13,11 @@ namespace WebApp.Domain.Models
     {
         [Key]
         public int Id { get; set; }
+        public DateTime Date { get; set; } = new DateTime();
         public bool Direction { get; set; }
         public int TargetId { get; set; }
         public List<ItemEntry> Entries { get; set; }
+        public List<Transaction> LeafTransactions { get; set; } = new List<Transaction>();
         [NotMapped]
         public virtual Gateway CustomerGateway { get; set; }
         [NotMapped]
@@ -37,10 +39,10 @@ namespace WebApp.Domain.Models
             Entries.ForEach(i =>
             {
 
-                Transaction t = new Transaction {  TargetId = i.Id, Direction = this.Direction, Gateway = ChildrenGateway, Quantity = i.Qty };
+                Transaction t = new Transaction { TargetId = i.Id, Direction = this.Direction, Gateway = ChildrenGateway, Quantity = i.Qty };
                 if (t.Post())
                 {
-                    total +=i.Price*i.Qty ;
+                    total += i.Price * i.Qty;
 
                 }
 

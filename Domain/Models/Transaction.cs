@@ -11,12 +11,11 @@ namespace WebApp.Domain.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = new DateTime();
         public virtual bool Direction { get; set; } = true;
         public double Quantity { get; set; } = 0;
-        
-        public int GatewayId { get; set; }
-        
+
+        [NotMapped]
         public Gateway Gateway { get; set; }
         public int TargetId { get; set; }
         [MaxLength(20)]
@@ -35,7 +34,7 @@ namespace WebApp.Domain.Models
         {
             if (Direction)//true for income 
                 Quantity = -Quantity;
-            this.Gateway.GetTargetObjectAndUpdate(TargetId,Quantity);
+            this.Gateway.GetTargetObjectAndUpdate(TargetId, Quantity);
 
         }
 
