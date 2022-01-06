@@ -13,7 +13,7 @@ namespace WebApp.Domain.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime Date { get; set; } = new DateTime();
+        public DateTime Date { get; set; } = DateTime.Now;
         public bool Direction { get; set; }
         public int TargetId { get; set; }
         public List<ItemEntry> Entries { get; set; }

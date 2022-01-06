@@ -7,6 +7,7 @@ using WebApp.Common.Base;
 using WebApp.Domain.Models;
 using WebApp.Domain.Models.CompundTransactions;
 using WebApp.Domain.Models.Gateways;
+using WebApp.Domain.Models.Transactions;
 
 namespace WebApp.Infrastructure
 {
@@ -19,9 +20,10 @@ namespace WebApp.Infrastructure
         public DbSet<Item> Items { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<StockHubTrans> StockHubTransaction { get; set; }
         public DbSet<CompoundTransaction> CompoundTransactions { get; set; }
-        public DbSet<PO> POs{ get; set; }
-        public DbSet<SO> Sos{ get; set; }
+        public DbSet<PO> POs { get; set; }
+        public DbSet<SO> Sos { get; set; }
         public DbSet<Hub> Hubs { get; set; }
         //public DbSet<Gateway> Gateways { get; set; }
         //public DbSet<HubGateway> HubGateways { get; set; }

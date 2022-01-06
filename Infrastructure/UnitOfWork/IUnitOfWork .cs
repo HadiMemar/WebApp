@@ -17,6 +17,7 @@ namespace WebApp.Infrastructure.UnitOfWork
         ITransactionRepository Transactions { get; }
         IPORepository POs { get; }
         ISORepository SOs { get; }
+        IStockHubTransRepository StockHubTransactions { get; }
 
 
         int Complete();

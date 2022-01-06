@@ -22,6 +22,7 @@ namespace WebApp.Infrastructure.UnitOfWork
             Transactions = new TransactionRepository(_context);
             POs = new PORepository(_context);
             SOs = new SORepository(_context);
+            StockHubTransactions = new StockHubTransRepository(_context);
         }
         public IItemRepository Items { get; private set; }
         public ICustomerRepository Customers { get; private set; }
@@ -31,6 +32,7 @@ namespace WebApp.Infrastructure.UnitOfWork
         public ITransactionRepository Transactions { get; private set; }
         public IPORepository POs { get; private set; }
         public ISORepository SOs { get; private set; }
+        public IStockHubTransRepository StockHubTransactions { get; private set; }
 
         public int Complete()
         {

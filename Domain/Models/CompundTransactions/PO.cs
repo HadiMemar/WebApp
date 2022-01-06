@@ -12,8 +12,6 @@ namespace WebApp.Domain.Models.CompundTransactions
     public class PO : CompoundTransaction
     {
         public int HubId { get; set; }
-
-
         public PO()
         {
 
@@ -26,33 +24,31 @@ namespace WebApp.Domain.Models.CompundTransactions
             this.ChildrenGateway._unitOfWork = unitOfWork;
             this.CustomerGateway._unitOfWork = unitOfWork;
         }
-        public override bool Post()
+        public void CreateLeafTransactions(List<ItemEntry> entries)
         {
             Double total = 0;
-            Entries.ForEach(i =>
+            entries.ForEach(i =>
             {
 
                 StockHubTrans aStockHubTrans = new StockHubTrans { HubId = HubId, Price = i.Price, TargetId = i.ItemId, Direction = Direction, Gateway = ChildrenGateway, Quantity = i.Qty };
-                if (aStockHubTrans.Post())
-                {
-                    this.LeafTransactions.Add(aStockHubTrans);
-                    unitOfWork.Transactions.Add(aStockHubTrans);
-                    total += aStockHubTrans.GetAmount();
-                    Total = total;
-                }
+                total += aStockHubTrans.GetAmount();
+                aStockHubTrans = unitOfWork.StockHubTransactions.Add(aStockHubTrans);
+                LeafTransactions.Add(aStockHubTrans);
 
             });
-
-            AccountTrans t = new AccountTrans { TargetId = TargetId, Direction = Direction, Gateway = CustomerGateway, Quantity = total };
-            if (t.Post())
+            Total = total;
+            Transaction accountTrans = new AccountTrans { TargetId = TargetId, Direction = Direction, Gateway = CustomerGateway, Quantity = total };
+            accountTrans = unitOfWork.Transactions.Add(accountTrans);
+            LeafTransactions.Add(accountTrans);
+        }
+        public override bool Post()
+        {
+            if (LeafTransactions.Count != 0)
             {
-                this.LeafTransactions.Add(t);
-                unitOfWork.Transactions.Add(t);
-                Total = total;
+                LeafTransactions.ForEach(leafTrans => leafTrans.Post());
                 return true;
             }
             return false;
-
         }
     }
 }

@@ -68,8 +68,9 @@ namespace WebApp.Controllers
         public IActionResult PostPO(int id)
         {
             PO po = new PO(_unitOfWork);
-            _unitOfWork.POs.Post(po, id);
-            return Ok();
+            var result = _unitOfWork.POs.Post(po, id);
+            _unitOfWork.Complete();
+            return Ok(result);
 
         }
         //[HttpGet("{id}/total")]

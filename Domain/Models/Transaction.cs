@@ -11,7 +11,7 @@ namespace WebApp.Domain.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime Date { get; set; } = new DateTime();
+        public DateTime Date { get; set; } = DateTime.Now;
         public virtual bool Direction { get; set; } = true;
         public double Quantity { get; set; } = 0;
 

@@ -25,8 +25,15 @@ namespace WebApp.Infrastructure.Repositories
             }
             return result;
         }
+        //public PO AddNewPO(PO po)
+        //{
+            
+        //    var x = _context.Set<PO>().Add(po);
 
-        public bool Post(PO po, int id)
+        //    return x.Entity;
+        //}
+
+        public PO Post(PO po, int id)
         {
             var result = _context.POs.AsNoTracking().Where(p => p.Id == id).Include(p => p.Entries).SingleOrDefault();
             if (result == null)
@@ -40,9 +47,10 @@ namespace WebApp.Infrastructure.Repositories
             po.LeafTransactions = result.LeafTransactions;
             po.Total = result.Total;
             po.Direction = result.Direction;
+            po.CreateLeafTransactions(po.Entries);
             po.Post();
             _context.POs.Update(po);
-            return true;
+            return po;
         }
     }
 }
